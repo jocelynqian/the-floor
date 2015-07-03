@@ -2,6 +2,7 @@ import json
 
 from games.commons.game import Game
 
+
 class TicTacToe(Game):
 
     e = 'e'
@@ -11,20 +12,16 @@ class TicTacToe(Game):
 
     def __init__(self):
         self._board = self.create_board()
-        #self._player_x = TicTacToePlayer(x)
-        #self._player_y = TicTacToePlayer(y)
+        # self._player_x = TicTacToePlayer(x)
+        # self._player_y = TicTacToePlayer(y)
         self._turn = None
         self._finished = 'e'
-        #add an error?
-        
-
+        # add an error?
 
     def get_state(self):
-        return json.dumps({'board':self._board,
-                                   'turn':self._turn,
-                                   'state':self._finished})
-        
-
+        return json.dumps({'board': self._board,
+                           'turn': self._turn,
+                           'state': self._finished})
 
     def update_state(self, update_json):
         # update should be json construct containing move location
@@ -38,44 +35,42 @@ class TicTacToe(Game):
             # should modify state to display some kind of error
             pass
 
-
     def start(self):
         self._turn = self.x
 
-
     def done(self):
         e = 'e'
-        #returns x, o for victory, e for unfinished, and t? for tie
+        # returns x, o for victory, e for unfinished, and t? for tie
         has_empty = False
         line_1 = set()
         line_2 = set()
-        #check horizontals and verticals
+        # check horizontals and verticals
         for i in range(3):
             for j in range(3):
-                #check to see if board is filled
+                # check to see if board is filled
                 if self._board[i][j] == e:
                     has_empty = True
-                #horizontals
+                # horizontals
                 line_1.add(self._board[i][j])
-                #verticals
+                # verticals
                 line_2.add(self._board[j][i])
-            #check lines for victory
+            # check lines for victory
             if self.check_line(line_1):
                 return self.check_line(line_1)
             if self.check_line(line_2):
                 return self.check_line(line_2)
-            #clear and check next set
+            # clear and check next set
             line_1.clear()
             line_2.clear()
-        #check diagonals
+        # check diagonals
         for i in range(3):
             line_1.add(self._board[i][i])
-            line_2.add(self._board[i][2-i])
+            line_2.add(self._board[i][2 - i])
         if self.check_line(line_1):
             return self.check_line(line_1)
         if self.check_line(line_2):
             return self.check_line(line_2)
-        #indicate whether or not the game is finished
+        # indicate whether or not the game is finished
         if has_empty:
             return 'e'
         else:
@@ -106,5 +101,3 @@ class TicTacToe(Game):
             return 'o'
         else:
             return None
-
-        

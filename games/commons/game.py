@@ -1,8 +1,8 @@
 import uuid
 
+
 class Game:
 
-    
     def get_state(self):
         raise NotImplementedError
 
@@ -18,10 +18,5 @@ class Game:
             self._uuid = uuid.uuid4()
         return self._uuid
 
-
     def done(self):
         raise NotImplementedError
-
-
-
-    
