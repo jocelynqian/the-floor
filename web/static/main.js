@@ -1,4 +1,5 @@
 var mainHtml = '';
+var gameId = '';
 
 function setUpMainMenu() {
     $('.game-link').click(function() {
@@ -11,7 +12,7 @@ function setUpMainMenu() {
         </div>";
         var gameMenu = '\
         <div id="game-container"> \
-            <a id="newGame" onclick="javascript: loadNewGame()">New Random Game<\a> \
+            <a id="newGame" onclick="javascript: loadNewGame(\'' + gameName + '\');">New Random Game<\a> \
         </div>';
         $('#main').html(backToMain + gameTitle + gameMenu);
     });
@@ -21,26 +22,34 @@ $(document).ready(setUpMainMenu);
 
 function loadMainMenu() {
     $('#main').html(mainHtml);
-    setUpMainMenu()
+    setUpMainMenu();
 }
 
-function loadNewGame() {
-    canv = '\
+function loadNewGame(gameName) {
+    var canv = '\
     <div id="gameCanvasContainer" text-align="center"> \
         <canvas width="600" height="600" id="board" onclick="javascript: clickHandler(event);"></canvas> \
-    </div>'
-    $("#game-container").html(canv)
+    </div>';
+    $("#game-container").html(canv);
     createGame();
 }
 
-function createGame() {
-    $.post('api/create', function(data) {
-        updateBoard();
+function createGame(gameName) {
+    var postData = {
+        name: gameName,
+    };
+    $.post('api/create', postData, function(data) {
+        data = JSON.parse(data);
+        gameId = data['game_id']
+        updateBoard(gameId);
     });
 }
 
-function updateBoard() {
-    $.get('api/state', function(data) {
+function updateBoard(id) {
+    var getParams = {
+        game_id: gameId,
+    };
+    $.get('api/state', getParams, function(data) {
         data = JSON.parse(data);
         paintBoard(data['board']);
     });
@@ -63,12 +72,13 @@ function clickHandler(e) {
     var x = Math.floor(clientX / (width / 3));
 
     var postData = {
+        game_id: gameId,
         update_json: JSON.stringify({
             square: [x, y]
         })
     };
     $.post('api/update', postData, function(data) {
-        updateBoard();
+        updateBoard(gameId);
     });
 }
 
