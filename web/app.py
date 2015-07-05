@@ -16,10 +16,10 @@ class TicTacToeHandler(tornado.web.RequestHandler):
 class CreateHandler(tornado.web.RequestHandler):
     def post(self, *args, **kwargs):
         new_game = TicTacToe()
-        game_id = new_game.uuid().hex
+        game_id = new_game.uuid.hex
         games[game_id] = new_game
         new_game.start()
-        self.write(json.loads({'game_id': game_id}))
+        self.write(json.dumps({'game_id': game_id}))
         # need to pass uuid of game somehow?
 
 
