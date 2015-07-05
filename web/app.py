@@ -7,12 +7,6 @@ from games.tictactoe.tictactoe import TicTacToe
 games = {}
 
 
-class TicTacToeHandler(tornado.web.RequestHandler):
-    def get(self):
-        # takes you to tictactoe landing page? how
-        pass
-
-
 class CreateHandler(tornado.web.RequestHandler):
     def post(self, *args, **kwargs):
         new_game = TicTacToe()
@@ -20,27 +14,35 @@ class CreateHandler(tornado.web.RequestHandler):
         games[game_id] = new_game
         new_game.start()
         self.write(json.dumps({'game_id': game_id}))
-        # need to pass uuid of game somehow?
 
 
 class UpdateHandler(tornado.web.RequestHandler):
     def post(self):
         game_id = self.get_argument('game_id')
+        player_id = self.get_argument('player_id')
         update_json = self.get_argument('update_json')
-        games[game_id].update_state(update_json)
+        games[game_id].update_state(player_id, update_json)
 
 
 class StateHandler(tornado.web.RequestHandler):
     def get(self):
         game_id = self.get_argument('game_id')
-        info = games[game_id].get_state()
+        player_id = self.get_argument('player_id')
+        info = games[game_id].get_state(player_id)
         self.write(info)
 
+
+class JoinHandler(tornado.web.RequestHandler):
+    def post(self):
+        game_id = self.get_argument('game_id')
+        player_id = games[game_id].add_player()
+        self.write(json.dumps({'player_id': player_id}))
+
 application = tornado.web.Application([
-    (r"/tictactoe", TicTacToeHandler),
     (r"/api/create", CreateHandler),
     (r"/api/update", UpdateHandler),
     (r"/api/state", StateHandler),
+    (r"/api/join", JoinHandler),
     (r"/static/(.*)",
      tornado.web.StaticFileHandler,
      {'path': 'web/static'}),

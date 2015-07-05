@@ -3,10 +3,10 @@ import uuid
 
 class Game(object):
 
-    def get_state(self):
+    def get_state(self, player_id):
         raise NotImplementedError
 
-    def update_state(self):
+    def update_state(self, player_id):
         raise NotImplementedError
 
     def start(self):
@@ -19,4 +19,7 @@ class Game(object):
         return self._uuid
 
     def done(self):
+        raise NotImplementedError
+
+    def add_player(self):
         raise NotImplementedError

@@ -1,34 +1,33 @@
 import json
 
 from games.commons.game import Game
+from games.tictactoe.player import TicTacToePlayer
 
 
 class TicTacToe(Game):
 
     def __init__(self):
         self._board = self.create_board()
-        # self._player_x = TicTacToePlayer(x)
-        # self._player_y = TicTacToePlayer(y)
         self._turn = None
         self._finished = 'e'
+        self._players = {}
+        self._seats = 2
         # add an error?
 
-    def get_state(self):
+    def get_state(self, player_id):
         return json.dumps({'board': self._board,
                            'turn': self._turn,
                            'state': self._finished})
 
-    def update_state(self, update_json):
-        # update should be json construct containing move location
+    def update_state(self, player_id, update_json):
+        # update contains move location
         update = json.loads(update_json)
-        # checks move location, displays error
-        if self.is_empty(update['square']):
-            self.mark_square(self._turn, update['square'])
-            self.finish_turn()
-            self._finished = self.done()
-        else:
-            # should modify state to display some kind of error
-            pass
+        # checks validity of move
+        assert self.is_valid(player_id, update['square']), "Invalid move"
+        # makes move, finishes turn, checks if the game is over
+        self.mark_square(self._turn, update['square'])
+        self.finish_turn()
+        self._finished = self.done()
 
     def start(self):
         self._turn = 'x'
@@ -75,10 +74,15 @@ class TicTacToe(Game):
         e = 'e'
         return [[e, e, e], [e, e, e], [e, e, e]]
 
-    def is_empty(self, square):
-        if self._board[square[0]][square[1]] == 'e':
-            return True
-        return False
+    # TODO: modify to output specific errors
+    def is_valid(self, player_id, square):
+        if self._finished != 'e':
+            assert False, "The game is already finished"
+        if self._players[player_id].get_piece() != self._turn:
+            assert False, "Not your turn"
+        if self._board[square[0]][square[1]] != 'e':
+            assert False, "Not an empty square"
+        return True
 
     def mark_square(self, symbol, square):
         self._board[square[0]][square[1]] = symbol
@@ -96,3 +100,13 @@ class TicTacToe(Game):
             return 'o'
         else:
             return None
+
+    def add_player(self):
+        assert self._seats > 0, "This game is full."
+        if self._seats == 1:
+            new_player = TicTacToePlayer('o')
+        else:
+            new_player = TicTacToePlayer('x')
+        player_id = new_player.uuid.hex
+        self._players[player_id] = new_player
+        return player_id
