@@ -109,4 +109,5 @@ class TicTacToe(Game):
             new_player = TicTacToePlayer('x')
         player_id = new_player.uuid.hex
         self._players[player_id] = new_player
+        self._seats -= 1
         return player_id

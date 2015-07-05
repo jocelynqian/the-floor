@@ -11,7 +11,8 @@ h2 {
   text-align: center;
 }
 
-.game-link {
+.game-link, 
+.link {
   text-align: center;
   color: Blue;
 }
@@ -20,7 +21,13 @@ h2 {
   text-align: center;
 }
 
-#home-menu {
+#game-id {
+  text-align: center;
+}
+
+
+#home-menu,
+#game-menu {
   text-align: center;
 }
 

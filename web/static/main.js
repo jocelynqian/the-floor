@@ -1,20 +1,24 @@
 var mainHtml = '';
+var gameName = '';
 var gameId = '';
+var playerId = '';
 
 function setUpMainMenu() {
     $('.game-link').click(function() {
         mainHtml = $('#main').html();
-        var gameName = $(this).text();
+        gameName = $(this).text();
         var gameTitle = '<h2>' + gameName + '</h2>';
+        var gameIdLine = '<div id="game-id"></div>'
         var backToMain = "\
         <div id='home-menu'> \
-            <a id='main-link' onclick='javascript: loadMainMenu()'>Main Menu<\a> \
+            <a class='link' onclick='javascript: loadMainMenu()'>Main Menu</a> \
         </div>";
         var gameMenu = '\
         <div id="game-container"> \
-            <a id="newGame" onclick="javascript: loadNewGame(\'' + gameName + '\');">New Random Game<\a> \
+            <a class="game-link" onclick="javascript: createGame(\'' + gameName + '\');">New Random Game</a><br> \
+            <a class="game-link" onclick="javascript: getGameIdAndJoin(\'' + gameName + '\');">Join Game</a> \
         </div>';
-        $('#main').html(backToMain + gameTitle + gameMenu);
+        $('#main').html(backToMain + gameTitle + gameIdLine + gameMenu);
     });
 }
 
@@ -25,29 +29,40 @@ function loadMainMenu() {
     setUpMainMenu();
 }
 
-function loadNewGame(gameName) {
-    var canv = '\
-    <div id="gameCanvasContainer" text-align="center"> \
-        <canvas width="600" height="600" id="board" onclick="javascript: clickHandler(event);"></canvas> \
-    </div>';
-    $("#game-container").html(canv);
-    createGame();
+function getGameIdAndJoin(gameName) {
+    gameId = window.prompt("Enter the game id:", "");
+    joinGame(gameName, gameId);
 }
 
 function createGame(gameName) {
     var postData = {
-        name: gameName,
+        game_name: gameName,
     };
     $.post('api/create', postData, function(data) {
         data = JSON.parse(data);
-        gameId = data['game_id']
-        updateBoard(gameId);
+        gameId = data['game_id'];
+        $('#game-id').html('Game Id: ' + gameId);
+        joinGame(gameName, gameId);
     });
 }
 
-function updateBoard(id) {
-    var getParams = {
+function joinGame(gameName, gameId) {
+    var postData = {
+        game_name: gameName,
         game_id: gameId,
+    };
+    $.post('api/join', postData, function(data) {
+        data = JSON.parse(data);
+        playerId = data['player_id'];
+        refreshState(gameName, gameId, playerId);
+    });
+}
+
+function refreshState(gameName, gameId, playerId) {
+    var getParams = {
+        game_name: gameName,
+        game_id: gameId,
+        player_id: playerId,
     };
     $.get('api/state', getParams, function(data) {
         data = JSON.parse(data);
@@ -72,25 +87,36 @@ function clickHandler(e) {
     var x = Math.floor(clientX / (width / 3));
 
     var postData = {
+        game_name: gameName,
         game_id: gameId,
+        player_id: playerId, 
         update_json: JSON.stringify({
             square: [x, y]
         })
     };
     $.post('api/update', postData, function(data) {
-        updateBoard(gameId);
+        refreshState(gameName, gameId, playerId);
     });
 }
 
 function paintBoard(boardState) {
     var board = document.getElementById('board');
+    if (board == null) {
+        var canv = '\
+        <div id="gameCanvasContainer" text-align="center"> \
+            <canvas width="600" height="600" id="board" onclick="javascript: clickHandler(event);"></canvas> \
+        </div>';
+        $("#game-container").html(canv);
+        board = document.getElementById('board');   
+    }
+
     var width = board.width;
     var height = board.height;
     var context = board.getContext('2d');
 
     var img = new Image();
     img.onload = function() {
-        context.drawImage(img, 0, 0, 600, 600);
+        context.drawImage(img, 0, 0, width, height);
         var len = 3;
         for (var x = 0; x < len; ++x) {
             for (var y = 0; y < len; ++y) {
