@@ -6,11 +6,6 @@ from games.tictactoe.tictactoe import TicTacToe
 my_game = None
 
 
-class MainHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.write("Hello, world")
-
-
 class TicTacToeHandler(tornado.web.RequestHandler):
     def get(self):
         # takes you to tictactoe landing page? how
@@ -37,11 +32,17 @@ class StateHandler(tornado.web.RequestHandler):
         self.write(info)
 
 application = tornado.web.Application([
-    (r"/", MainHandler),
     (r"/tictactoe", TicTacToeHandler),
     (r"/api/create", CreateHandler),
     (r"/api/update", UpdateHandler),
     (r"/api/state", StateHandler),
+    (r"/static/(.*)",
+     tornado.web.StaticFileHandler,
+     {'path': 'web/static'}),
+    (r"/(.*)",
+     tornado.web.StaticFileHandler,
+     {'path': 'web',
+      'default_filename': 'index.html'}),
 ])
 
 if __name__ == "__main__":
