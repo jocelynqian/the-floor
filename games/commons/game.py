@@ -1,7 +1,7 @@
 import uuid
 
 
-class Game:
+class Game(object):
 
     def get_state(self):
         raise NotImplementedError

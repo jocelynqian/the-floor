@@ -1,7 +1,7 @@
 import uuid
 
 
-class Player:
+class Player(object):
 
     @property
     def uuid(self):

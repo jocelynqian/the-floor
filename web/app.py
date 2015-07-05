@@ -1,9 +1,10 @@
 import tornado.ioloop
 import tornado.web
+import json
 
 from games.tictactoe.tictactoe import TicTacToe
 
-my_game = None
+games = {}
 
 
 class TicTacToeHandler(tornado.web.RequestHandler):
@@ -14,21 +15,25 @@ class TicTacToeHandler(tornado.web.RequestHandler):
 
 class CreateHandler(tornado.web.RequestHandler):
     def post(self, *args, **kwargs):
-        global my_game
-        my_game = TicTacToe()
-        my_game.start()
+        new_game = TicTacToe()
+        game_id = new_game.uuid().hex
+        games[game_id] = new_game
+        new_game.start()
+        self.write(json.loads({'game_id': game_id}))
+        # need to pass uuid of game somehow?
 
 
 class UpdateHandler(tornado.web.RequestHandler):
     def post(self):
+        game_id = self.get_argument('game_id')
         update_json = self.get_argument('update_json')
-        my_game.update_state(update_json)
+        games[game_id].update_state(update_json)
 
 
 class StateHandler(tornado.web.RequestHandler):
     def get(self):
-        global my_game
-        info = my_game.get_state()
+        game_id = self.get_argument('game_id')
+        info = games[game_id].get_state()
         self.write(info)
 
 application = tornado.web.Application([
