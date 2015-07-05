@@ -5,11 +5,6 @@ from games.commons.game import Game
 
 class TicTacToe(Game):
 
-    e = 'e'
-    x = 'x'
-    o = 'o'
-    t = 't'
-
     def __init__(self):
         self._board = self.create_board()
         # self._player_x = TicTacToePlayer(x)
@@ -36,7 +31,7 @@ class TicTacToe(Game):
             pass
 
     def start(self):
-        self._turn = self.x
+        self._turn = 'x'
 
     def done(self):
         e = 'e'
@@ -90,7 +85,7 @@ class TicTacToe(Game):
 
     def finish_turn(self):
         if self._turn == 'x':
-            self._turn = 'y'
+            self._turn = 'o'
         else:
             self._turn = 'x'
 

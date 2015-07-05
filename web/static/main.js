@@ -84,7 +84,7 @@ function paintBoard(boardState) {
         var len = 3;
         for (var x = 0; x < len; ++x) {
             for (var y = 0; y < len; ++y) {
-                if (boardState[x][y] == 'y') {
+                if (boardState[x][y] == 'o') {
                     paintPiece(x, y, 'o');
                 } else if (boardState[x][y] == 'x') {
                     paintPiece(x, y, 'x');
