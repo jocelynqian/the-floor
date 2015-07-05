@@ -41,7 +41,7 @@ application = tornado.web.Application([
      {'path': 'web/static'}),
     (r"/(.*)",
      tornado.web.StaticFileHandler,
-     {'path': 'web',
+     {'path': 'web/static',
       'default_filename': 'index.html'}),
 ])
 
