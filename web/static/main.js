@@ -67,6 +67,7 @@ function refreshState(gameName, gameId, playerId) {
     $.get('api/state', getParams, function(data) {
         data = JSON.parse(data);
         paintBoard(data['board']);
+        setTimeout(refreshState, 3000, gameName, gameId, playerId)
     });
 }
 
@@ -108,27 +109,33 @@ function paintBoard(boardState) {
         </div>';
         $("#game-container").html(canv);
         board = document.getElementById('board');   
+        var width = board.width;
+        var height = board.height;
+        var context = board.getContext('2d');
+
+        var img = new Image();
+        img.onload = function() {
+            context.drawImage(img, 0, 0, width, height);
+            paintPieces(boardState);
+        }
+        img.src = 'static/tictactoe-board.png';
+    } else {
+        paintPieces(boardState);
     }
 
-    var width = board.width;
-    var height = board.height;
-    var context = board.getContext('2d');
+}
 
-    var img = new Image();
-    img.onload = function() {
-        context.drawImage(img, 0, 0, width, height);
-        var len = 3;
-        for (var x = 0; x < len; ++x) {
-            for (var y = 0; y < len; ++y) {
-                if (boardState[x][y] == 'o') {
-                    paintPiece(x, y, 'o');
-                } else if (boardState[x][y] == 'x') {
-                    paintPiece(x, y, 'x');
-                }
+function paintPieces(boardState) {
+    var len = 3;
+    for (var x = 0; x < len; ++x) {
+        for (var y = 0; y < len; ++y) {
+            if (boardState[x][y] == 'o') {
+                paintPiece(x, y, 'o');
+            } else if (boardState[x][y] == 'x') {
+                paintPiece(x, y, 'x');
             }
         }
     }
-    img.src = 'static/tictactoe-board.png';
 }
 
 function paintPiece(x, y, piece) {
