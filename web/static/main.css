@@ -11,6 +11,10 @@ h2 {
   text-align: center;
 }
 
+table {
+  table-layout: fixed;
+}
+
 .game-link, 
 .link {
   text-align: center;
