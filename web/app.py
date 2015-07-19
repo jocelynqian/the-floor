@@ -1,9 +1,11 @@
 import tornado.ioloop
 import tornado.web
 import json
+import logging
 
 from games.tictactoe.tictactoe import TicTacToe
 
+logging.basicConfig(format='%(asctime)-15s %(message)s', level='INFO')
 games = {}
 
 
@@ -54,4 +56,5 @@ application = tornado.web.Application([
 
 if __name__ == "__main__":
     application.listen(8888)
+    logging.info("Server started at port 8888.")
     tornado.ioloop.IOLoop.current().start()
