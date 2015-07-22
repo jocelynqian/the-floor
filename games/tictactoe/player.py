@@ -7,4 +7,5 @@ class TicTacToePlayer(Player):
         self._piece = piece
 
     def get_piece(self):
+        """Returns the tictactoe symbol associated with player"""
         return self._piece
