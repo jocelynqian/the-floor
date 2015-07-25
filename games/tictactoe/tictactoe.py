@@ -1,6 +1,7 @@
 import json
 
 from games.commons.game import Game
+from games.commons.errors import InvalidActionError
 from games.tictactoe.player import TicTacToePlayer
 
 """This module contains the game logic for Tic Tac Toe.
@@ -17,7 +18,7 @@ class TicTacToe(Game):
         self._finished = 'e'
         self._players = {}
         self._seats = 2
-        # add an error?
+        self._error = None
 
     def get_state(self, player_id):
         """Returns JSON containing current state of game visible to player.
@@ -31,6 +32,8 @@ class TicTacToe(Game):
                      move.
             state -- Contains 'e' if the game is incomplete, 'x'/'o' for the
                      respective players victories, and 't' for a tie.
+            error -- Contains None if there is no error, an Exception when an
+                     error has occurred.
         """
         return json.dumps({'board': self._board,
                            'turn': self._turn,
@@ -43,15 +46,24 @@ class TicTacToe(Game):
 
             update_json -- JSON containing the key 'square', mapping to the
                            coordinates of the board square to be updated.
+
+        Returns:
+
+            InvalidActionError -- If the update was invalid.
+            None -- If the update was successful.
         """
         # update contains move location
         update = json.loads(update_json)
         # checks validity of move
-        assert self.is_valid(player_id, update['square']), "Invalid move"
-        # makes move, finishes turn, checks if the game is over
-        self.mark_square(self._turn, update['square'])
-        self.finish_turn()
-        self._finished = self.done()
+        if self.is_valid(player_id, update['square']):
+            # makes move, finishes turn, checks if the game is over
+            self.mark_square(self._turn, update['square'])
+            self.finish_turn()
+            self._finished = self.done()
+            return None
+        else:
+            # TODO: handle errors more elegantly?
+            return self._error
 
     def start(self):
         """Starts the game.
@@ -113,7 +125,7 @@ class TicTacToe(Game):
         e = 'e'
         return [[e, e, e], [e, e, e], [e, e, e]]
 
-    # TODO: modify to output specific errors
+    # TODO: modify errors to a better format
     def is_valid(self, player_id, square):
         """Checks if a given move is valid
 
@@ -124,11 +136,14 @@ class TicTacToe(Game):
                       square[1] respectively.
         """
         if self._finished != 'e':
-            assert False, "The game is already finished"
+            self._error = InvalidActionError("This game is already finished")
+            return False
         if self._players[player_id].get_piece() != self._turn:
-            assert False, "Not your turn"
+            self._error = InvalidActionError("It is not your turn")
+            return False
         if self._board[square[0]][square[1]] != 'e':
-            assert False, "Not an empty square"
+            self._error = InvalidActionError("This square is not empty")
+            return False
         return True
 
     def mark_square(self, symbol, square):

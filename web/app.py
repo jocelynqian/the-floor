@@ -30,7 +30,9 @@ class UpdateHandler(tornado.web.RequestHandler):
         game_id = self.get_argument('game_id')
         player_id = self.get_argument('player_id')
         update_json = self.get_argument('update_json')
-        games[game_id].update_state(player_id, update_json)
+        error = games[game_id].update_state(player_id, update_json)
+        if error:
+            self.write(json.dumps({'message': str(error)}))
 
 
 class StateHandler(tornado.web.RequestHandler):
