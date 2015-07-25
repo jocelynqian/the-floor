@@ -1,3 +1,7 @@
+* {
+  font-family: 'Comic Sans MS';
+}
+
 body {
   background-color: white;
 }
@@ -19,6 +23,7 @@ table {
 .link {
   text-align: center;
   color: Blue;
+  font-family: 'Comic Sans MS';
 }
 
 #game-container {
