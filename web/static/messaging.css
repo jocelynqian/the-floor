@@ -17,18 +17,14 @@ a {
   
     a:hover { text-decoration:underline; }
   
-#wrapper, #loginform {
+#chatwrapper{
     float: right;
     margin:0 auto;
     padding-bottom:25px;
     background:#EBF4FB;
-    height:500px;
+    height:510px;
     width:27%;
     border:1px solid #ACD8F0; }
-  
-#loginform { padding-top:18px; }
-  
-    #loginform p { margin: 5px; }
   
 #chatbox {
     text-align:left;
@@ -43,11 +39,10 @@ a {
     overflow:auto; }
   
 #usermsg {
-    width:395px;
+    width:90%;
     border:1px solid #ACD8F0; }
   
 #submit { width: 60px; }
   
 .error { color: #ff0000; }
-  
-#menu { padding:12.5px 25px 12.5px 25px; }
+
