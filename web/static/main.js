@@ -34,7 +34,7 @@ function getUsernameAndLogin() {
         };
 
         var error = function(xhr, textStatus, errorThrown) {
-            if (textStatus == "400") {
+            if (xhr.status == 400) {
                 alert('Invalid user name!');
             }
         };
