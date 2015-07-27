@@ -26,6 +26,11 @@ table {
   font-family: 'Comic Sans MS';
 }
 
+#game-wrapper {
+  float: left;
+  width: 70%;
+}
+
 #game-container {
   text-align: center;
 }
