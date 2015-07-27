@@ -5,6 +5,13 @@ import logging
 
 from games.tictactoe.tictactoe import TicTacToe
 
+from lib.user import (
+    create_user,
+    get_user,
+    InvalidUserNameException,
+    UserAlreadyExistsException,
+)
+
 logging.basicConfig(format='%(asctime)-15s %(message)s', level='INFO')
 games = {}
 
@@ -40,7 +47,22 @@ class JoinHandler(tornado.web.RequestHandler):
         player_id = games[game_id].add_player()
         self.write(json.dumps({'player_id': player_id}))
 
+
+class LoginHandler(tornado.web.RequestHandler):
+    def post(self):
+        name = self.get_argument('name')
+        user = get_user(name)
+        if not user:
+            try:
+                create_user(name)
+            except UserAlreadyExistsException:
+                self.set_status(403)
+            except InvalidUserNameException:
+                self.set_status(400)
+
+
 application = tornado.web.Application([
+    (r"/api/login", LoginHandler),
     (r"/api/create", CreateHandler),
     (r"/api/update", UpdateHandler),
     (r"/api/state", StateHandler),

@@ -1,6 +1,7 @@
 $.getScript("game.js");
 
 var mainHtml = '';
+var username = null;
 
 function setUpMainMenu() {
     $('.game-link').click(function() {
@@ -21,7 +22,49 @@ function setUpMainMenu() {
     });
 }
 
-$(document).ready(setUpMainMenu);
+function getUsernameAndLogin() {
+    var name = window.prompt("Enter your username:", "");
+    if (name != null) {
+        var data = {
+            name: name,
+        };
+        var success = function(data) {
+            username = name;
+            setUpLogin();
+        };
+
+        var error = function(xhr, textStatus, errorThrown) {
+            if (textStatus == "400") {
+                alert('Invalid user name!');
+            }
+        };
+
+        $.ajax({
+            type: "POST",
+            url: 'api/login',
+            data: data,
+            success: success,
+            error: error,
+        });
+    }
+}
+
+function setUpLogin() {
+    var getUsernameLink = '<a class="link" onclick="javascript: getUsernameAndLogin();">Set your username</a>'; 
+    var userInfo = getUsernameLink;
+    if (username != null) {
+        userInfo = 'Hi ' + username + '!';
+    }
+
+    $('#user-info-container').html(userInfo);
+}
+
+function onloadSetUp() {
+    setUpMainMenu();
+    setUpLogin();
+}
+
+$(document).ready(onloadSetUp);
 
 // TODO(paul): Keep track of which view we are in (eg, menu, a game, etc) and 
 //             have a function switch between them appropriately.
