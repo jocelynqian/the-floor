@@ -1,10 +1,22 @@
 function loadLog(){     
 
+        var success = function(html) {
+            $("#chat-box").html(html); //Insert chat log into the #chatbox div  
+        };
+
+
         $.ajax({
-            url: "log.html",
+            type: 'GET',
+            url: 'api/messages',
+            data: 'user_name=anon',
             cache: false,
-            success: function(html){        
-                $("#chatbox").html(html); //Insert chat log into the #chatbox div               
-            },
+            success: success,
         });
     }
+
+
+
+
+$(document).ready(function(){
+    setInterval(loadLog, 2500);
+});
