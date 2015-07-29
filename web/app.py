@@ -2,6 +2,7 @@ import tornado.ioloop
 import tornado.web
 import json
 import logging
+from collections import defaultdict
 
 from games.tictactoe.tictactoe import TicTacToe
 
@@ -12,8 +13,11 @@ from lib.user import (
     UserAlreadyExistsException,
 )
 
+from lib.message_utils import generate_messages_html
+
 logging.basicConfig(format='%(asctime)-15s %(message)s', level='INFO')
 games = {}
+user_messages = defaultdict(list)
 
 
 class CreateHandler(tornado.web.RequestHandler):
@@ -32,7 +36,8 @@ class UpdateHandler(tornado.web.RequestHandler):
         update_json = self.get_argument('update_json')
         error = games[game_id].update_state(player_id, update_json)
         if error:
-            self.write(json.dumps({'message': str(error)}))
+            user = self.get_cookie('user_name')
+            user_messages[user].append(str(error))
 
 
 class StateHandler(tornado.web.RequestHandler):
@@ -65,12 +70,22 @@ class LoginHandler(tornado.web.RequestHandler):
                 self.set_cookie('user_name', name)
 
 
+class MessageHandler(tornado.web.RequestHandler):
+    def get(self):
+        user = self.get_cookie('user_name')
+        messages = user_messages[user]
+        # TODO: check if user is there?
+        messages_html = generate_messages_html(messages)
+        self.write(messages_html)  # TODO: check that this works
+
+
 application = tornado.web.Application([
     (r"/api/login", LoginHandler),
     (r"/api/create", CreateHandler),
     (r"/api/update", UpdateHandler),
     (r"/api/state", StateHandler),
     (r"/api/join", JoinHandler),
+    (r"/api/messages", MessageHandler),
     (r"/static/(.*)",
      tornado.web.StaticFileHandler,
      {'path': 'web/static'}),
