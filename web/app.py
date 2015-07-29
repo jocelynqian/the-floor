@@ -61,6 +61,8 @@ class LoginHandler(tornado.web.RequestHandler):
                 self.set_status(403)
             except InvalidUserNameException:
                 self.set_status(400)
+            else:
+                self.set_cookie('user_name', name)
 
 
 application = tornado.web.Application([
