@@ -37,7 +37,7 @@ class UpdateHandler(tornado.web.RequestHandler):
         error = games[game_id].update_state(player_id, update_json)
         if error:
             user = self.get_cookie('user_name')
-            user_messages[user] = str(error)
+            user_messages[user].append(str(error))
 
 
 class StateHandler(tornado.web.RequestHandler):
