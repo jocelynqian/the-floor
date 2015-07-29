@@ -36,7 +36,7 @@ function joinGame(gameName, gameId) {
     });
 }
 
-function refreshState(gameName, gameId, playerId) {
+function refreshState(gameName, gameId, playerId, refreshOnce) {
     var getParams = {
         game_name: gameName,
         game_id: gameId,
@@ -45,7 +45,8 @@ function refreshState(gameName, gameId, playerId) {
     $.get('api/state', getParams, function(data) {
         data = JSON.parse(data);
         gameInstance.paintBoard(data['board']);
-        setTimeout(refreshState, 3000, gameName, gameId, playerId)
+        if (refreshOnce == false)
+            setTimeout(refreshState, 3000, gameName, gameId, playerId);
     });
 }
 

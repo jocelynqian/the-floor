@@ -26,7 +26,7 @@ TicTacToe.clickHandler = function(e) {
         })
     };
     $.post('api/update', postData, function(data) {
-        refreshState(gameName, gameId, playerId);
+        refreshState(gameName, gameId, playerId, false);
     });
 }
 
