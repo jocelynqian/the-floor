@@ -19,10 +19,14 @@ logging.basicConfig(format='%(asctime)-15s %(message)s', level='INFO')
 games = {}
 user_messages = defaultdict(list)
 
+game_types = {
+    'Tic Tac Toe': TicTacToe,
+}
+
 
 class CreateHandler(tornado.web.RequestHandler):
     def post(self, *args, **kwargs):
-        new_game = TicTacToe()
+        new_game = game_types[self.get_argument('game_name')]()
         game_id = new_game.uuid.hex
         games[game_id] = new_game
         new_game.start()
