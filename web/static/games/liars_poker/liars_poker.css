@@ -1,0 +1,81 @@
+
+#poker-table {
+
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 25px;
+  background: #277714;
+  padding: 20px;
+  width:90%;
+  height:600px;
+  
+}
+
+.player-seat {
+
+  position: relative;
+  height: 100px;
+  width: 1000px;
+}
+
+.player-hand {
+
+  float: right;
+  height: 100px;
+  width: 700px;
+}
+
+.card-back {
+
+  float:left;
+  height: 90px;
+  width: 65px;
+  margin: 10px;
+  border-radius:5px;
+  background: blue;
+
+}
+
+.name-placard {
+
+  position: absolute;
+  top: 35px;
+  left: 10px;
+  border-radius: 25px;
+  width: 200px;
+  height: 30px;
+  background: #e49e00;
+}
+
+p.player-name {
+  text-align: center;
+  line-height: 150%;
+  font-family: "Lucida Grande", Lucida, Sans-Serif;
+}
+
+
+#toolbar {
+
+  position: absolute;
+  border-radius: 25px;
+  background: #2f3234;
+  height: 550px;
+  width: 75px;
+  top: 25px;
+  right: 10px;
+
+}
+
+#help-button {
+
+    position: absolute;
+    top: 25px;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    border-style: solid;
+    border-color: white;
+
+}
