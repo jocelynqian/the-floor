@@ -10,9 +10,23 @@ if (!document.getElementById(lp_css)){
 }
 
 
-function LiarsPoker(){
+function LiarsPoker(gameId, playerId){
+    this.gameId = gameId;
+    this.playerId = playerId;
 }
 
+
+LiarsPoker.prototype.refreshState = function(responseData){
+    if (responseData['new_round']){
+        $("#poker-table").remove();
+        this.setTable(responseData);
+        this.updateInfo("START!!!");
+    }
+    else{
+        this.updateInfo(responseData['last_combo'].join());
+    }
+
+}
 
 LiarsPoker.prototype.setTable = function(tableState) {
 
@@ -21,7 +35,9 @@ LiarsPoker.prototype.setTable = function(tableState) {
         var canv = '\
         <div id="poker-table"> \
             <div id="toolbar"> \
-                <div id="help-button"></div> \
+                <div id="help-button"> \
+                    <p class="question">?</p> \
+                </div> \
             </div> \
         </div>';
         $("#game-container").html(canv);
@@ -46,11 +62,58 @@ LiarsPoker.prototype.setTable = function(tableState) {
             playerHTML = playerHTML + '</div></div>';
 
             $("#poker-table").append(playerHTML);
-
-            console.log(cardCounts[player]);
         }
 
         // Display your hand
+        hand = tableState['hand'];
+        var handHTML = '<div id="hand">';
+
+        for(card in hand){
+            // TODO: display real cards
+            handHTML = handHTML + '<div class="card-front">  \
+                                    <p>' + hand[card] +'</p></div>';
+        }
+        handHTML = handHTML + '</div>';
+        $("#poker-table").append(handHTML);
+
     }
     
+}
+
+LiarsPoker.prototype.requestHelp = function(){
+
+}
+
+LiarsPoker.prototype.updateInfo = function(message){
+    console.log(message);
+    var infoBox = document.getElementById('info-box');
+    if (infoBox == null) {
+        var infoBoxHTML = '<div id="info-box"></div>'
+        $("#poker-table").append(infoBoxHTML);       
+    }
+    $("#info-box").html('<p>' + message + '</p>');
+
+}
+
+LiarsPoker.prototype.makeClaim = function(claim){
+
+}
+
+LiarsPoker.prototype.challenge = function(){
+    var postData = {
+        game_id: this.gameId,
+        player_id: this.playerId, 
+        update_json: JSON.stringify({
+            move: "challenge"
+        })
+    };
+
+    $.post('api/update', postData, function(data) {
+        refreshState(gameId, playerId, false);
+    })
+
+}
+
+LiarsPoker.prototype.challengeResult = function(){
+
 }

@@ -37,6 +37,16 @@
 
 }
 
+.card-front {
+
+  float:left;
+  height: 110px;
+  width: 70px;
+  margin: 10px;
+  border-radius:5px;
+  background: white;
+
+}
 .name-placard {
 
   position: absolute;
@@ -54,6 +64,20 @@ p.player-name {
   font-family: "Lucida Grande", Lucida, Sans-Serif;
 }
 
+p.question {
+  text-align: center;
+  line-height: 200%;
+  color: white;
+}
+
+#hand {
+
+  position: absolute;
+  bottom: 50px;
+  left: 50px;
+  height: 200px;
+  width: 60%;
+}
 
 #toolbar {
 
@@ -69,13 +93,24 @@ p.player-name {
 
 #help-button {
 
-    position: absolute;
-    top: 25px;
-    right: 20px;
-    width: 30px;
-    height: 30px;
-    border-radius: 15px;
-    border-style: solid;
-    border-color: white;
+  position: absolute;
+  top: 25px;
+  right: 20px;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  border-style: solid;
+  border-color: white;
 
+}
+
+#info-box {
+
+  position: absolute;
+  bottom: 10px;
+  left: 100px;
+  height: 30px;
+  width: 60%;
+  background: gray;
+  border-radius: 15px;
 }

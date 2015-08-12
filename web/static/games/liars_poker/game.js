@@ -48,11 +48,11 @@ function joinGame(gameName, gameId) {
     });*/
 
     gameInstance = new LiarsPoker();
-    refreshState(gameName, gameId, 2);
+    refreshState(gameId, 2);
     
 }
 
-function refreshState(gameName, gameId, playerId, refreshOnce) {
+function refreshState(gameId, playerId, refreshOnce) {
     /*var getParams = {
         game_name: gameName,
         game_id: gameId,
@@ -66,7 +66,7 @@ function refreshState(gameName, gameId, playerId, refreshOnce) {
     });
 */
 
-    data = {counts:{'Player One': 2}, hand:['AS', 'KS', 'QS']};
-    gameInstance.setTable(data);
+    data = {counts:{'Player One': 2}, hand:["AS", "KS", "QS"], new_round:true};
+    gameInstance.refreshState(data);
 }
 
