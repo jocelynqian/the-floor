@@ -24,6 +24,8 @@ class LiarsPoker(Game):
         self._max_seats = 6
         self._hand_limit = 5
 
+        self._started = False
+
     def _cards_to_json(self, cards):
         return [card.tuple() for card in cards]
 
@@ -55,27 +57,37 @@ class LiarsPoker(Game):
                 Hands last revealed. A mapping from player id to hand.
             player_ordering
                 List of player ids representing the turn ordering.
+            started
+                Whether the game has started.
             error
                 Contains None if there is no error, an Exception when an
                 error has occurred.
         """
-        hand = self._cards_to_json(self._players[player_id].hand)
-        counts = dict([
-            (uuid, player.num_cards)
-            for uuid, player in self._players.items() if not player.lost
-        ])
-        last_hands = dict([
-            (uuid, self._cards_to_json(player.last_hand))
-            for uuid, player in self._players.items()
-        ])
+        if self._started:
+            hand = self._cards_to_json(self._players[player_id].hand)
+            counts = dict([
+                (uuid, player.num_cards)
+                for uuid, player in self._players.items() if not player.lost
+            ])
+            last_hands = dict([
+                (uuid, self._cards_to_json(player.last_hand))
+                for uuid, player in self._players.items()
+            ])
 
-        return json.dumps({'hand': hand,
-                           'counts': counts,
-                           'turn': self._turn,
-                           'new_round': self._new_round,
-                           'last_hands': last_hands,
-                           'last_combo': self._last_combo,
-                           'player_ordering': self._player_ordering})
+            state = {
+                'hand': hand,
+                'counts': counts,
+                'turn': self._turn,
+                'new_round': self._new_round,
+                'last_hands': last_hands,
+                'last_combo': self._last_combo,
+                'player_ordering': self._player_ordering,
+                'started': self._started
+            }
+        else:
+            state = {'started': self._started}
+
+        return json.dumps(state)
 
     def update_state(self, player_id, update_json):
         """Updates game state based on player and update_json.
@@ -145,6 +157,7 @@ class LiarsPoker(Game):
 
         Errors if the number of players is not in the legal range.
         """
+        assert not self._started, "Game already started"
         assert len(self._players) <= self._max_seats, "Too many players"
         assert len(self._players) >= self._min_seats, "Too few players"
         self._deck = Deck()
@@ -153,6 +166,7 @@ class LiarsPoker(Game):
         self._turn = 0
         self._deal()
         self._new_round = True
+        self._started = True
 
     def done(self):
         """Checks if the game is complete.

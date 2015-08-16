@@ -6,8 +6,9 @@ var username = null;
 function setUpMainMenu() {
     $('.game-link').click(function() {
         mainHtml = $('#main').html();
-        gameName = $(this).text();
-        var gameTitle = '<h2>' + gameName + '</h2>';
+        var gameLabel = $(this).text();
+        var gameName = $(this).attr('gameName')
+        var gameTitle = '<h2>' + gameLabel + '</h2>';
         var gameIdLine = '<div id="game-id"></div>'
         var backToMain = "\
         <div id='home-menu'> \
@@ -50,7 +51,7 @@ function getUsernameAndLogin() {
 }
 
 function setUpLogin() {
-    var getUsernameLink = '<a class="link" onclick="javascript: getUsernameAndLogin();">Set your username</a>'; 
+    var getUsernameLink = '<a class="link" onclick="javascript: getUsernameAndLogin();">Set your username</a>';
     var userInfo = getUsernameLink;
     if (username != null) {
         userInfo = 'Hi ' + username + '!';
@@ -66,7 +67,7 @@ function onloadSetUp() {
 
 $(document).ready(onloadSetUp);
 
-// TODO(paul): Keep track of which view we are in (eg, menu, a game, etc) and 
+// TODO(paul): Keep track of which view we are in (eg, menu, a game, etc) and
 //             have a function switch between them appropriately.
 function loadMainMenu() {
     $('#main').html(mainHtml);

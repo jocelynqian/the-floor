@@ -20,6 +20,8 @@ class TicTacToe(Game):
         self._seats = 2
         self._error = None
 
+        self._started = False
+
     def get_state(self, player_id):
         """Returns JSON containing current state of game visible to player.
 
@@ -32,12 +34,14 @@ class TicTacToe(Game):
                      move.
             state -- Contains 'e' if the game is incomplete, 'x'/'o' for the
                      respective players victories, and 't' for a tie.
+            started -- Whether the game has started.
             error -- Contains None if there is no error, an Exception when an
                      error has occurred.
         """
         return json.dumps({'board': self._board,
                            'turn': self._turn,
-                           'state': self._finished})
+                           'state': self._finished,
+                           'started': self._started})
 
     def update_state(self, player_id, update_json):
         """Updates game state based on player and update_json.
@@ -70,7 +74,9 @@ class TicTacToe(Game):
 
         The player with the symbol 'x' is set as the first to play.
         """
+        assert not self._started, 'Game already started'
         self._turn = 'x'
+        self._started = True
 
     def done(self):
         """Checks if the game is complete.

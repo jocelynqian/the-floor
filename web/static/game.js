@@ -23,6 +23,8 @@ function createGame(gameName) {
 }
 
 function joinGame(gameName, gameId) {
+    gameInstance = new TicTacToe();
+
     var postData = {
         game_name: gameName,
         game_id: gameId,
@@ -30,12 +32,25 @@ function joinGame(gameName, gameId) {
     $.post('api/join', postData, function(data) {
         data = JSON.parse(data);
         playerId = data['player_id'];
-        // TODO(paul): decide what game to create based on gameName
-        gameInstance = new TicTacToe();
-        refreshState(gameName, gameId, playerId);
+        $('#game-container').html(
+            '<a class="game-link" onclick="javascript: startGame(\'' + gameName + '\', \'' + gameId + '\', \'' + playerId + '\');">Start Game</a>'
+        );
+        refreshState(gameName, gameId, playerId, false);
     });
 }
 
+function startGame(gameName, gameId, playerId) {
+    var postData = {
+        game_name: gameName,
+        game_id: gameId,
+        player_id: playerId
+    };
+    $.post('api/start', postData, function(data) {
+        // TODO(paul): decide what game to create based on gameName
+        refreshState(gameName, gameId, playerId, true);
+    });
+
+}
 function refreshState(gameName, gameId, playerId, refreshOnce) {
     var getParams = {
         game_name: gameName,
@@ -44,9 +59,10 @@ function refreshState(gameName, gameId, playerId, refreshOnce) {
     };
     $.get('api/state', getParams, function(data) {
         data = JSON.parse(data);
-        gameInstance.paintBoard(data['board']);
+        if (data['started'])
+            gameInstance.paintBoard(data['board']);
         if (refreshOnce == false)
-            setTimeout(refreshState, 3000, gameName, gameId, playerId);
+            setTimeout(refreshState, 3000, gameName, gameId, playerId, false);
     });
 }
 

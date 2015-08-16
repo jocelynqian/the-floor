@@ -5,6 +5,7 @@ import logging
 from collections import defaultdict
 
 from games.tictactoe.tictactoe import TicTacToe
+from games.liars_poker.liars_poker import LiarsPoker
 
 from lib.user import (
     create_user,
@@ -20,7 +21,8 @@ games = {}
 user_messages = defaultdict(list)
 
 game_types = {
-    'Tic Tac Toe': TicTacToe,
+    'TicTacToe': TicTacToe,
+    'LiarsPoker': LiarsPoker,
 }
 
 
@@ -29,8 +31,13 @@ class CreateHandler(tornado.web.RequestHandler):
         new_game = game_types[self.get_argument('game_name')]()
         game_id = new_game.uuid.hex
         games[game_id] = new_game
-        new_game.start()
         self.write(json.dumps({'game_id': game_id}))
+
+
+class StartHandler(tornado.web.RequestHandler):
+    def post(self, *args, **kwargs):
+        game_id = self.get_argument('game_id')
+        games[game_id].start()
 
 
 class UpdateHandler(tornado.web.RequestHandler):
@@ -86,6 +93,7 @@ class MessageHandler(tornado.web.RequestHandler):
 application = tornado.web.Application([
     (r"/api/login", LoginHandler),
     (r"/api/create", CreateHandler),
+    (r"/api/start", StartHandler),
     (r"/api/update", UpdateHandler),
     (r"/api/state", StateHandler),
     (r"/api/join", JoinHandler),
