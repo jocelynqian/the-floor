@@ -38,6 +38,8 @@ LiarsPoker.prototype.setTable = function(tableState) {
                 <div id="help-button"> \
                     <p class="question">?</p> \
                 </div> \
+                <div id="call-button"> \
+                </div> \
             </div> \
         </div>';
         $("#game-container").html(canv);
@@ -79,11 +81,11 @@ LiarsPoker.prototype.setTable = function(tableState) {
     }
     
 }
-
+/*
 LiarsPoker.prototype.requestHelp = function(){
 
 }
-
+*/
 LiarsPoker.prototype.updateInfo = function(message){
     console.log(message);
     var infoBox = document.getElementById('info-box');
@@ -94,8 +96,32 @@ LiarsPoker.prototype.updateInfo = function(message){
     $("#info-box").html('<p>' + message + '</p>');
 
 }
+/*
+LiarsPoker.prototype.makeClaim = function(){
 
-LiarsPoker.prototype.makeClaim = function(claim){
+    var comboForm = $("#claim-form").serializeArray();
+    var comboData = [];
+    for(i in comboForm){
+        if(comboForm[i].name == "combo"){
+            combo[0] = comboForm[i].value;
+        }
+        else{
+            combo.append(comboForm[i].value);
+        }
+    }
+
+    var postData = {
+        game_id: this.gameId,
+        player_id: this.playerId, 
+        update_json: JSON.stringify({
+            move: "claim"
+            combo: comboData
+        })
+    };
+
+    $.post('api/update', postData, function(data) {
+        refreshState(gameId, playerId, false);
+    })
 
 }
 
@@ -113,7 +139,10 @@ LiarsPoker.prototype.challenge = function(){
     })
 
 }
-
+*/
+/*
 LiarsPoker.prototype.challengeResult = function(){
 
 }
+
+*/

@@ -104,6 +104,18 @@ p.question {
 
 }
 
+#call-button {
+
+  position: absolute;
+  top: 100px;
+  right: 20px;
+  width: 30px;
+  height: 60px;
+  border-radius: 15px;
+  border-style: solid;
+  border-color: white;
+}
+
 #info-box {
 
   position: absolute;
