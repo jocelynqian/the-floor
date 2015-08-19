@@ -1,4 +1,8 @@
-function TicTacToe() {
+function TicTacToe(gameId, playerId) {
+}
+
+TicTacToe.prototype.refreshState = function(responseData) {
+    this.paintBoard(responseData['board']);
 }
  
 TicTacToe.clickHandler = function(e) {

@@ -1,4 +1,7 @@
-$.getScript("games/tictactoe.js");
+var gameDict = {
+    "TicTacToe": ["games/tictactoe.js", "TicTacToe"],
+    "LiarsPoker": ["games/liars_poker/liars_poker.js", "LiarsPoker"]
+}
 
 var gameName = '';
 var gameId = '';
@@ -23,7 +26,8 @@ function createGame(gameName) {
 }
 
 function joinGame(gameName, gameId) {
-    gameInstance = new TicTacToe();
+    // Load appropriate javascript file.
+    $.getScript(gameDict[gameName][0]);
 
     var postData = {
         game_name: gameName,
@@ -32,6 +36,9 @@ function joinGame(gameName, gameId) {
     $.post('api/join', postData, function(data) {
         data = JSON.parse(data);
         playerId = data['player_id'];
+        // Load appropriate game.
+        gameConstructor = gameDict[gameName][1];
+        gameInstance = new window[gameConstructor](gameId, playerId);
         $('#game-container').html(
             '<a class="game-link" onclick="javascript: startGame(\'' + gameName + '\', \'' + gameId + '\', \'' + playerId + '\');">Start Game</a>'
         );
@@ -46,7 +53,6 @@ function startGame(gameName, gameId, playerId) {
         player_id: playerId
     };
     $.post('api/start', postData, function(data) {
-        // TODO(paul): decide what game to create based on gameName
         refreshState(gameName, gameId, playerId, true);
     });
 
@@ -60,7 +66,7 @@ function refreshState(gameName, gameId, playerId, refreshOnce) {
     $.get('api/state', getParams, function(data) {
         data = JSON.parse(data);
         if (data['started'])
-            gameInstance.paintBoard(data['board']);
+            gameInstance.refreshState(data);
         if (refreshOnce == false)
             setTimeout(refreshState, 3000, gameName, gameId, playerId, false);
     });
