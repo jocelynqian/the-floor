@@ -1,5 +1,5 @@
 
-def Card(Object):
+class Card(object):
 	"""Represents a card in the 7 wonders game.  Each type of card (resource, 
 	   military, etc.) will inherit from this class.
 
@@ -47,17 +47,17 @@ def Card(Object):
 				continue
 
 			assert( type(cost) is str )
-			if cost in gry_rsrc_list:
-				gry_rsrc_list += cost
-			elif cost in brwn_rsrc_list:
-				brwn_rsrc_list += cost
+			if cost in self.gry_rsrc_list:
+				gry_rsrc_req += cost
+			elif cost in self.brwn_rsrc_list:
+				brwn_rsrc_req += cost
 
 	def __str__(self):
 		out_str = "Card name: " + self.name
 		out_str += "\n Color: " + self.color
 		return out_str
 
-def ResourceCard(Card):
+class ResourceCard(Card):
 	"""Represents a brown or gray resource card.
 
 	Attributes:
@@ -98,37 +98,45 @@ def ResourceCard(Card):
 			self.curr_rsrc[player] = tot_rsrc
 		self.has_rsrc = {}
 
-def BrownResource(ResourceCard):
+class BrownResource(ResourceCard):
 	"""Represents a brown resource card.
 	"""
 	def __init__(self, name, cost_req, tech_tree, age, min_players, \
 					tot_rsrc, rsrc_list):
 		""" rsrc_list is a list of rsrcs provided by the card """
 		ResourceCard.__init__(self, name, cost_req, tech_tree, age, \
-			min_players, "brown", tot_rsrc)
+			min_players, tot_rsrc, "brown")
 		
 		for rsrc in rsrc_list:
-			assert( rsrc in brwn_rsrc_list )
+			assert( rsrc in self.brwn_rsrc_list )
 
-		for rsrc in brwn_rsrc_list:
+		for rsrc in self.brwn_rsrc_list:
 			if rsrc in rsrc_list:
-				has_rsrc[rsrc] = True
+				self.has_rsrc[rsrc] = True
 			else:
-				has_rsrc[rsrc] = False 
+				self.has_rsrc[rsrc] = False 
 
-def GrayResource(ResourceCard):
+class GrayResource(ResourceCard):
 	"""Represents a gray resource card.
 	"""
 	def __init__(self, name, cost_req, tech_tree, age, min_players, rsrc_list):
 		""" rsrc_list is a list of rsrcs provided by the card """
 		ResourceCard.__init__(self, name, cost_req, tech_tree, age, \
-			min_players, "gray", 1)
+			min_players, 1, "gray")
 		
 		for rsrc in rsrc_list:
-			assert( rsrc in gry_rsrc_list )
+			assert( rsrc in self.gry_rsrc_list )
 
-		for rsrc in gry_rsrc_list:
+		for rsrc in self.gry_rsrc_list:
 			if rsrc in rsrc_list:
-				has_rsrc[rsrc] = True
+				self.has_rsrc[rsrc] = True
 			else:
-				has_rsrc[rsrc] = False 
+				self.has_rsrc[rsrc] = False 
+
+
+#Test:
+tech_tree = {}
+tech_tree['prev'] = []
+tech_tree['next'] = []
+ore_card = BrownResource("ORE",[],tech_tree,1,3,1,['ORE'])
+print ore_card
