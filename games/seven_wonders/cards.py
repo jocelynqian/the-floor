@@ -52,9 +52,9 @@ class Card(object):
 
 			assert( type(cost) is str )
 			if cost in self.gry_rsrc_list:
-				gry_rsrc_req += cost
+				self.gry_rsrc_req += cost
 			elif cost in self.brwn_rsrc_list:
-				brwn_rsrc_req += cost
+				self.brwn_rsrc_req += cost
 
 	def __str__(self):
 		out_str = "Card name: " + self.name
@@ -295,7 +295,7 @@ class BlueCard(Card):
 
 	def __init__(self, name, cost_req, tech_tree, age, min_players,\
 			 victory_points):
-		assert( type(self.victory_points) is int)
+		assert( type(victory_points) is int)
 		descrip = "Provides " + str(victory_points) + " victory points."
 		Card.__init__(self, name, cost_req, tech_tree, age, min_players, \
 			descrip, color="blue")
