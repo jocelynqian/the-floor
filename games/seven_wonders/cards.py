@@ -52,14 +52,30 @@ class Card(object):
 
 			assert( type(cost) is str )
 			if cost in self.gry_rsrc_list:
-				self.gry_rsrc_req += cost
+				self.gry_rsrc_req += [cost,]
 			elif cost in self.brwn_rsrc_list:
-				self.brwn_rsrc_req += cost
+				self.brwn_rsrc_req += [cost,]
 
 	def __str__(self):
+		rsrc_req = self.brwn_rsrc_req+self.gry_rsrc_req
+		print len(rsrc_req)
+		if self.coins_req > 0:
+			rsrc_req += [str(self.coins_req)+" coins",]
+
 		out_str = "Card name: " + self.name
 		out_str += "\n Color: " + self.color
+		out_str += "\n Cost: " + str(rsrc_req)
+		if len(self.tech_tree['prev']) > 0:
+			out_str += "\n This card can be built for free with: "
+			for prev_card in self.tech_tree['prev']:
+				out_str +=  prev_card + ', '
+		if len(self.tech_tree['next']) > 0:
+			out_str += "\n This card allows you to build the following cards "\
+				+"for free: "
+			for next_card in self.tech_tree['next']:
+				out_str += next_card + ', '
 		out_str += "\n Description: " + self.descrip
+		out_str += "\n Age: "+str(self.age)
 		return out_str
 
 	def instant_effect(self, curr_player, left_neighbor, right_neighbor):
@@ -366,9 +382,3 @@ class PurpleCard(Card):
 			return vic_pts
 		return 0
 
-#Test:
-tech_tree = {}
-tech_tree['prev'] = []
-tech_tree['next'] = []
-ore_card = BrownResource("ORE",[],tech_tree,1,3,1,['ORE'])
-print ore_card
