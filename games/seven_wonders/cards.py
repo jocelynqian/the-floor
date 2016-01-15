@@ -141,12 +141,12 @@ class ResourceCard(Card):
 class BrownResource(ResourceCard):
 	"""Represents a brown resource card.
 	"""
-	def __init__(self, name, cost_req, tech_tree, age, min_players, \
+	def __init__(self, name, cost_req, age, min_players, \
 					tot_rsrc, rsrc_list):
 		""" rsrc_list is a list of rsrcs provided by the card """
 
 		assert( len(rsrc_list) > 0)
-		descrip = "Provides "+str(tot_rsrc)+" "
+		descrip = "Provides "+str(tot_rsrc)
 		if len(rsrc_list) > 1:
 			descrip += " of the following: "
 			for rsrc in rsrc_list[:-1]:
@@ -154,6 +154,10 @@ class BrownResource(ResourceCard):
 			descrip += rsrc_list[-1]+"."
 		else:
 			descrip += rsrc_list[0]+"."
+
+		tech_tree = {}
+		tech_tree['prev'] = []
+		tech_tree['next'] = []
 		ResourceCard.__init__(self, name, cost_req, tech_tree, age, \
 			min_players, tot_rsrc, descrip, color="brown")
 		
@@ -170,10 +174,14 @@ class GrayResource(ResourceCard):
 	"""Represents a gray resource card.
 
 	"""
-	def __init__(self, name, cost_req, tech_tree, age, min_players, rsrc_list):
+	def __init__(self, name, age, min_players):
 		""" rsrc_list is a list of rsrcs provided by the card """
 
-		assert( len(rsrc_list) == 1 )
+		rsrc_list = [name,]
+		cost_req = []
+		tech_tree = {}
+		tech_tree['prev'] = []
+		tech_tree['next'] = []
 		descrip = "Provides 1 " + rsrc_list[0] +'.'
 		ResourceCard.__init__(self, name, cost_req, tech_tree, age, \
 			min_players, 1, descrip, color="gray")
