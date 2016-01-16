@@ -7,8 +7,12 @@ class Game(object):
         """Returns JSON containing current state of game visible to player"""
         raise NotImplementedError
 
-    def update_state(self, player_id):
-        """Updates the state after player action"""
+    def update_state(self, player_id, update_json):
+        """Updates the state after player action.
+
+        update_json should contain a json representing the
+        action the player is taking.
+        """
         raise NotImplementedError
 
     def start(self):
