@@ -5,7 +5,7 @@ if (!document.getElementById(lp_css)){
     link.id = lp_css;
     link.rel = 'stylesheet';
     link.type = 'text/css';
-    link.href = 'liars_poker.css';
+    link.href = 'games/liars_poker/liars_poker.css';
     head.appendChild(link);
 }
 
@@ -36,7 +36,6 @@ LiarsPoker.prototype.setTable = function(tableState) {
         <div id="poker-table"> \
             <div id="toolbar"> \
                 <div id="help-button"> \
-                    <p class="question">?</p> \
                 </div> \
                 <div id="call-button"> \
                 </div> \
@@ -44,6 +43,7 @@ LiarsPoker.prototype.setTable = function(tableState) {
         </div>';
         $("#game-container").html(canv);
         table = document.getElementById('poker-table');
+        $("#help-button").click(this.requestHelp);
 
         // TODO: Add the round number
 
@@ -81,13 +81,17 @@ LiarsPoker.prototype.setTable = function(tableState) {
     }
     
 }
-/*
-LiarsPoker.prototype.requestHelp = function(){
+
+LiarsPoker.prototype.requestHelp = function(e){
+    console.log("it's happening");
+    helpHTML = '<div id="help-page"> \
+                <p>Nothing here yet</p> \
+                </div>';
+    $("#poker-table").append(helpHTML);
 
 }
-*/
+
 LiarsPoker.prototype.updateInfo = function(message){
-    console.log(message);
     var infoBox = document.getElementById('info-box');
     if (infoBox == null) {
         var infoBoxHTML = '<div id="info-box"></div>'

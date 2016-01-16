@@ -101,6 +101,8 @@ p.question {
   border-radius: 15px;
   border-style: solid;
   border-color: white;
+  background: #2f3234;
+  z-index: 10;
 
 }
 
@@ -125,4 +127,17 @@ p.question {
   width: 60%;
   background: gray;
   border-radius: 15px;
+}
+
+#help-page{
+
+  position: absolute;
+  background: #626262;
+  width: 90%;
+  height: 550px;
+  bottom: 25px;
+  left: 50px;
+  z-index: 10;
+  opacity: 0.8;
+
 }

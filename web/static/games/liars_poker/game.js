@@ -17,7 +17,7 @@ function getGameIdAndJoin(gameName) {
 }
 
 function createGame(gameName) {
-    /*var postData = {
+    var postData = {
         game_name: gameName,
     };
     $.post('api/create', postData, function(data) {
@@ -26,11 +26,6 @@ function createGame(gameName) {
         $('#game-id').html('Game Id: ' + gameId);
         joinGame(gameName, gameId);
     });
-*/
-    
-    joinGame(gameName, 2);
-
-
 
 }
 
